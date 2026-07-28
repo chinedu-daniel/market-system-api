@@ -1,4 +1,4 @@
-const customerService = require("../services/customer.services");
+const customerService = require("../services/customer.service");
 const asyncHandler = require("../utils/asyncHandler");
 
 exports.registerCustomer = asyncHandler(async(req, res) => {
