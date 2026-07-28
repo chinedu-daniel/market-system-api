@@ -1,7 +1,7 @@
 const customerRepository = require("../repositories/customer.respository");
 const AppError = require("../utils/appError");
 
-exports.registerCustomer = async (customerData) => {
+exports.registerCustomer = async (customerData, currentUser) => {
     const existingCustomer = await customerRepository.findCustomerByEmail(customerData.email);
 
     if (existingCustomer) {
