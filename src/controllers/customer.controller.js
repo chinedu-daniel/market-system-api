@@ -8,4 +8,4 @@ exports.registerCustomer = asyncHandler(async(req, res) => {
         message: "Customer created successfully",
         data: customer
     });
-});
+})
