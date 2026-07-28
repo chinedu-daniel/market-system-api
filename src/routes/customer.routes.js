@@ -16,3 +16,5 @@ router.post(
     validate(registerCustomerSchema),
     customerController.registerCustomer
 );
+
+module.exports = router;
