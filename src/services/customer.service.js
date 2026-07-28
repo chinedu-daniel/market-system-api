@@ -1,4 +1,4 @@
-const customerRepository = require("../repositories/customer.respository");
+const customerRepository = require("../repositories/customer.repository");
 const AppError = require("../utils/appError");
 
 exports.registerCustomer = async (customerData, currentUser) => {
