@@ -1,12 +1,16 @@
 const customerRepository = require("../repositories/customer.respository");
+const AppError = require("../utils/appError");
 
-exports.createCustomer = async(data) =>{
-    const customer = {
-        first_name: data.first_name,
-        last_name: data.last_name,
-        email: data.email,
-        phone: data.phone
-    };
+exports.registerCustomer = async (customerData) => {
+    const existingCustomer = await customerRepository.findCustomerByEmail(customerData.email);
 
-    const createdCustomer = await customerRepository.createCustomer(customer);
-}
+    if (existingCustomer) {
+        throw new AppError(
+            "Customer with this email already exists", 409
+        );
+    }
+
+    const customer = await customerRepository.createCustomer(customerData);
+
+    return customer;
+};
