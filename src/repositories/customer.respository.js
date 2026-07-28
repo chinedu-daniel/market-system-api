@@ -1,6 +1,14 @@
-const db = require("../config/database");
+const db = require("../db/database");
 
-exports.create = async(customer) => {
+exports.findCustomerByEmail = async (email) => {
+    const result = await db.query(
+        `
+        SELECT 
+        `
+    );
+}
+
+exports.createCustomer = async(customerData) => {
     const query = `
         INSERT INTO customers
         (first_name,last_name,email,phone)
