@@ -1,4 +1,4 @@
-const db = require("../db");
+const db = require("../db/database");
 
 exports.findUserByEmail = async (email) => {
   const result = await db.query(
