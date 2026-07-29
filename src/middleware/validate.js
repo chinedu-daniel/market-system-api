@@ -3,7 +3,7 @@ function validate(schema) {
         const { error } = schema.validate(req.body);
         
         if (error) {
-            const error = new Error("Email is required");
+            // const error = new Error("Email is required");
             return next(error);
         }
         
