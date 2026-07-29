@@ -14,3 +14,9 @@ exports.registerCustomer = async (customerData, currentUser) => {
 
     return customer;
 };
+
+exports.getCustomers = async () => {
+    const customers = await customerRepository.findAllCustomers();
+
+    return customers;
+};
