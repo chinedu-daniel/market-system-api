@@ -17,6 +17,11 @@ router.post(
     customerController.registerCustomer
 );
 
-router.get("/", protect, authorize("admin", "sales"), customerController.getCustomers);
+router.get(
+    "/",
+    protect,
+    authorize("admin", "sales"),
+    customerController.getCustomers
+);
 
 module.exports = router;
