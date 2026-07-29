@@ -65,3 +65,14 @@ exports.findAllCustomers = async () => {
 
     return result.rows;
 };
+
+exports.findCustomerById = async(id) => {
+    const result = await db.query(
+        `
+        SELECT id, first_name, last_name, email, phone, created_at, updated_at FROM customers WHERE id = $1
+        `,
+        [id]
+    );
+
+    return result.rows[0];
+};
