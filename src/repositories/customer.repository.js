@@ -55,7 +55,9 @@ exports.findAllCustomers = async () => {
             first_name,
             last_name,
             email,
-            phone 
+            phone,
+            created_at,
+            updated_at 
         FROM customers 
         ORDER BY created_at DESC
         `
