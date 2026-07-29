@@ -9,3 +9,12 @@ exports.registerCustomer = asyncHandler(async(req, res) => {
         data: customer
     });
 })
+
+exports.getCustomers = asyncHandler(async(req, res) => {
+    const customers = await customerService.getCustomers();
+
+    res.status(200).json({
+        message: "Customers fetched successfully",
+        data: customers
+    });
+});
