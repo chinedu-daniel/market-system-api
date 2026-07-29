@@ -20,3 +20,16 @@ exports.getCustomers = async () => {
 
     return customers;
 };
+
+exports.getCustomerById = async (id) => {
+    const customer = await customerRepository.findCustomerById(id);
+
+    if (!customer) {
+        throw new AppError(
+            "Customer not found",
+            404
+        );
+    }
+
+    return customer;
+};
