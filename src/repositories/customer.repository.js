@@ -46,3 +46,20 @@ exports.createCustomer = async(customerData) => {
 
     return result.rows[0];
 };
+
+exports.findAllCustomers = async () => {
+    const result = await db.query(
+        `
+        SELECT 
+            id,
+            first_name,
+            last_name,
+            email,
+            phone 
+        FROM customers 
+        ORDER BY created_at DESC
+        `
+    );
+
+    return result.rows;
+};
