@@ -42,10 +42,26 @@ exports.signup = async (data) => {
         expiresAt
     );
 
-    await sendVerificationEmail(
-        newUser,
-        rawToken
-    );
+    const verificationUrl = `${frontendUrl}/verify-email?token=${rawToken}`;
+
+    console.log("NODE_ENV =", process.env.NODE_ENV);
+
+    if (process.env.NODE_ENV === "development") {
+        console.log("\n===========================");
+        console.log("EMAIL SENDING DISABLED");
+        console.log("Verification URL");
+        console.log(verificationUrl);
+        console.log("================================\n");
+    } else {
+        await sendVerificationEmail(
+            newUser,
+            rawToken
+        );
+    }
+    // await sendVerificationEmail(
+    //     newUser,
+    //     rawToken
+    // );
 
     return { 
         user: {
@@ -191,10 +207,25 @@ exports.forgotPassword = async (email) => {
 
     await userRepository.savePasswordResetToken(user.id, hashedToken, expiresAt);
 
-    await sendPasswordResetEmail(
-        user,
-        rawToken
-    );
+    const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}`;
+
+    if (process.env.NODE_ENV === "development") {
+        console.log("\n====================");
+        console.log("PASSWORD RESET EMAIL DISABLED");
+        console.log("Reset URL:");
+        console.log(resetUrl);
+        console.log("========================\n");
+    } else {
+        await sendPasswordResetEmail(
+            user,
+            rawToken
+        );
+    }
+
+    // await sendPasswordResetEmail(
+    //     user,
+    //     rawToken
+    // );
     
     return {
         message: "If an account with that email exists, a password reset link has been sent."
