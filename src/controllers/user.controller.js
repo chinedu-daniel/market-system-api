@@ -2,6 +2,8 @@ const userService = require("../services/user.services");
 const asyncHandler = require("../utils/asyncHandler");
 
 exports.signup = asyncHandler(async (req, res) => {
+  console.log(req.body);
+  
   const user = await userService.signup(req.body);
 
   res.status(201).json({
