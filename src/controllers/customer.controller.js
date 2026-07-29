@@ -18,3 +18,12 @@ exports.getCustomers = asyncHandler(async(req, res) => {
         data: customers
     });
 });
+
+exports.getCustomerById = asyncHandler(async(req, res) => {
+    const customer = await customerService.getCustomerById(req.params.id);
+
+    res.status(200).json({
+        message: "Customer will the ID fetched successfully",
+        data: customer
+    });
+});
