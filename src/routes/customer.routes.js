@@ -24,4 +24,11 @@ router.get(
     customerController.getCustomers
 );
 
+router.get(
+    "/:id",
+    protect,
+    authorize("admin", "sales"),
+    customerController.getCustomerById
+);
+
 module.exports = router;
