@@ -69,7 +69,16 @@ exports.findAllCustomers = async () => {
 exports.findCustomerById = async (id) => {
     const result = await db.query(
         `
-        SELECT id, first_name, last_name, email, phone, created_at, updated_at FROM customers WHERE id = $1
+        SELECT 
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            created_at,
+            updated_at
+            FROM customers
+            WHERE id = $1
         `,
         [id]
     );
@@ -114,4 +123,17 @@ exports.updateCustomer = async (id, customerData) => {
     const result = await db.query(query, values);
 
     return result.rows[0];
+};
+
+exports.deleteCustomer = async (id) => {
+    const result = await db.query(
+        `
+        DELETE FROM customers
+        WHERE id =$1
+        RETURNING *
+        `,
+        [id]
+    );
+
+    return result.rows[0]
 };
