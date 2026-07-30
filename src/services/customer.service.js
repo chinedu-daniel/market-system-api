@@ -33,3 +33,41 @@ exports.getCustomerById = async (id) => {
 
     return customer;
 };
+
+exports.updateCustomer = async (id, customerData) => {
+    if (Object.keys(customerData).length === 0) {
+        throw new AppError(
+            "At least one field must be provided",
+            400
+        );
+    }
+
+    const customer  = await customerRepository.findCustomerById(id);
+
+    if (!customer) {
+        throw new AppError(
+            "Customer not found",
+            404
+        );
+    }
+
+    if (customerData.email) {
+        const existingCustomer = 
+            await customerRepository.findCustomerByEmail(customerData.email);
+
+        if (
+            existingCustomer &&
+            existingCustomer.id !== Number(id)
+        ) {
+            throw new AppError(
+                "Customer with this email already exists",
+                409
+            );
+        }
+    }
+
+    return await customerRepository.updateCustomer(
+        id,
+        customerData
+    );
+};
