@@ -1,7 +1,7 @@
 const customerService = require("../services/customer.service");
 const asyncHandler = require("../utils/asyncHandler");
 
-exports.registerCustomer = asyncHandler(async(req, res) => {
+exports.registerCustomer = asyncHandler(async (req, res) => {
     const customer = await customerService.registerCustomer(req.body, req.user);
 
     res.status(201).json({
@@ -10,7 +10,7 @@ exports.registerCustomer = asyncHandler(async(req, res) => {
     });
 })
 
-exports.getCustomers = asyncHandler(async(req, res) => {
+exports.getCustomers = asyncHandler(async (req, res) => {
     const customers = await customerService.getCustomers();
 
     res.status(200).json({
@@ -19,7 +19,7 @@ exports.getCustomers = asyncHandler(async(req, res) => {
     });
 });
 
-exports.getCustomerById = asyncHandler(async(req, res) => {
+exports.getCustomerById = asyncHandler(async (req, res) => {
     const customer = await customerService.getCustomerById(req.params.id);
 
     res.status(200).json({
@@ -28,7 +28,7 @@ exports.getCustomerById = asyncHandler(async(req, res) => {
     });
 });
 
-exports.updateCustomer = asyncHandler(async(req, res) => {
+exports.updateCustomer = asyncHandler(async (req, res) => {
     const customer = await customerService.updateCustomer(
         req.params.id,
         req.body
@@ -37,5 +37,14 @@ exports.updateCustomer = asyncHandler(async(req, res) => {
     res.status(200).json({
         status: "success",
         data: customer
+    });
+});
+
+exports.deleteCustomer = asyncHandler(async (req, res) => {
+    await customerService.deleteCustomer(req.params.id);
+
+    res.status(200).json({
+        status: "success",
+        message: "Customer delete successfully"
     });
 });
