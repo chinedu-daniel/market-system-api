@@ -11,10 +11,13 @@ exports.registerCustomer = asyncHandler(async (req, res) => {
 })
 
 exports.getCustomers = asyncHandler(async (req, res) => {
-    const customers = await customerService.getCustomers();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const customers = await customerService.getCustomers(page, limit);
 
     res.status(200).json({
-        message: "Customers fetched successfully",
+        status: "success",
         data: customers
     });
 });
