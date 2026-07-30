@@ -14,11 +14,13 @@ exports.getCustomers = asyncHandler(async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
-    const customers = await customerService.getCustomers(page, limit);
+    const result = await customerService.getCustomers(page, limit);
 
     res.status(200).json({
         status: "success",
-        data: customers
+        results: result.customers.length,
+        pagination: result.pagination,
+        data: result.customers
     });
 });
 
