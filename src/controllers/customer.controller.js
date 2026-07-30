@@ -23,7 +23,19 @@ exports.getCustomerById = asyncHandler(async(req, res) => {
     const customer = await customerService.getCustomerById(req.params.id);
 
     res.status(200).json({
-        message: "Customer will the ID fetched successfully",
+        message: "Customer fetched successfully",
+        data: customer
+    });
+});
+
+exports.updateCustomer = asyncHandler(async(req, res) => {
+    const customer = await customerService.updateCustomer(
+        req.params.id,
+        req.body
+    );
+
+    res.status(200).json({
+        status: "success",
         data: customer
     });
 });
