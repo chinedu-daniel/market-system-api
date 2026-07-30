@@ -140,3 +140,14 @@ exports.deleteCustomer = async (id) => {
 
     return result.rows[0]
 };
+
+exports.countCustomers = async () => {
+    const result = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM customers
+        `
+    );
+
+    return Number(result.rows[0].total);
+};
