@@ -47,7 +47,7 @@ exports.createCustomer = async (customerData) => {
     return result.rows[0];
 };
 
-exports.findAllCustomers = async () => {
+exports.findAllCustomers = async (limit, offset) => {
     const result = await db.query(
         `
         SELECT 
@@ -60,7 +60,10 @@ exports.findAllCustomers = async () => {
             updated_at 
         FROM customers 
         ORDER BY created_at DESC
-        `
+        LIMIT $1
+        OFFSET $2
+        `,
+        [limit, offset]
     );
 
     return result.rows;
