@@ -31,4 +31,11 @@ router.get(
     customerController.getCustomerById
 );
 
+router.patch(
+    "/:id",
+    protect,
+    authorize("admin", "sales"),
+    customerController.updateCustomer
+);
+
 module.exports = router;
