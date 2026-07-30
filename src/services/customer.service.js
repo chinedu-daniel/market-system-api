@@ -71,3 +71,16 @@ exports.updateCustomer = async (id, customerData) => {
         customerData
     );
 };
+
+exports.deleteCustomer = async (id) => {
+    const deletedCustomer = await customerRepository.deleteCustomer(id)
+
+    if (!deletedCustomer) {
+        throw new AppError(
+            "Customer not found",
+            404
+        );
+    }
+
+    return deletedCustomer;
+};
