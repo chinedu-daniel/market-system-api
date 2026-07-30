@@ -38,4 +38,11 @@ router.patch(
     customerController.updateCustomer
 );
 
+router.delete(
+    "/:id",
+    protect,
+    authorize("admin", "sales"),
+    customerController.deleteCustomer
+);
+
 module.exports = router;
