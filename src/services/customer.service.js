@@ -19,7 +19,25 @@ exports.getCustomers = async (page, limit) => {
     const offset = (page - 1) * limit;
     const customers = await customerRepository.findAllCustomers(limit, offset);
 
-    return customers;
+    const totalItems = await customerRepository.countCustomers();
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const hasNextPage = page < totalPages;
+
+    const hasPreviousPage = page > 1;
+
+    return {
+        customers,
+        pagination: {
+            page,
+            limit,
+            totalItems,
+            totalPages,
+            hasNextPage,
+            hasPreviousPage
+        }
+    }
 };
 
 exports.getCustomerById = async (id) => {
