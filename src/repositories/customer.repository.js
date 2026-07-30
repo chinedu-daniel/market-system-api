@@ -13,7 +13,7 @@ exports.findCustomerByEmail = async (email) => {
     return result.rows[0];
 }
 
-exports.createCustomer = async(customerData) => {
+exports.createCustomer = async (customerData) => {
 
     const {
         first_name,
@@ -66,13 +66,52 @@ exports.findAllCustomers = async () => {
     return result.rows;
 };
 
-exports.findCustomerById = async(id) => {
+exports.findCustomerById = async (id) => {
     const result = await db.query(
         `
         SELECT id, first_name, last_name, email, phone, created_at, updated_at FROM customers WHERE id = $1
         `,
         [id]
     );
+
+    return result.rows[0];
+};
+
+exports.updateCustomer = async (id, customerData) => {
+    const allowedFields = [
+        "first_name",
+        "last_name",
+        "email",
+        "phone"
+    ];
+    
+    const updates = [];
+    const values = [];
+
+    allowedFields.forEach((field) => {
+        if (customerData[field] !== undefined) {
+            updates.push(`${field} = $${values.length + 1}`);
+            values.push(customerData[field]);
+        }
+    });
+
+    values.push(id);
+    
+    const query = `
+        UPDATE customers
+        SET ${updates.join(", ")}
+        WHERE id = $${values.length}
+        RETURNING
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            created_at,
+            updated_at;
+    `;
+
+    const result = await db.query(query, values);
 
     return result.rows[0];
 };
