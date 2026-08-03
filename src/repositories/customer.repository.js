@@ -47,8 +47,57 @@ exports.createCustomer = async (customerData) => {
     return result.rows[0];
 };
 
-exports.findAllCustomers = async (limit, offset) => {
-    const result = await db.query(
+exports.findCustomers = async (options) => {
+    const { 
+        limit,
+        offset,
+        filters
+    } = options;
+
+    const allowedFields = [
+        "first_name",
+        "last_name",
+        "email",
+        "phone"
+    ];
+
+    const conditions = [];
+    const values = [];
+
+    allowedFields.forEach((field) => {
+        if (filters[field] !== undefined) {
+            conditions.push(
+                `${field} = $${values.length + 1}`
+            );
+            values.push(filters[field]);
+        }
+    });
+
+    const whereClause = 
+        conditions.length > 0
+        ? `WHERE ${conditions.join(" AND ")}`
+        : "";
+
+    const countValues = [...values];
+
+    const countResult = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM customers
+        ${whereClause}
+        `,
+        countValues
+    );
+
+    const totalCount = Number(countResult.rows[0].total);
+    
+    const limitPlaceholder = values.length + 1;
+    const offsetPlaceholder = values.length + 2;
+
+    values.push(limit);
+    values.push(offset);
+
+    const customerResult = await db.query(
         `
         SELECT 
             id,
@@ -59,14 +108,18 @@ exports.findAllCustomers = async (limit, offset) => {
             created_at,
             updated_at 
         FROM customers 
+        ${whereClause}
         ORDER BY created_at DESC
-        LIMIT $1
-        OFFSET $2
+        LIMIT $${limitPlaceholder}
+        OFFSET $${offsetPlaceholder}
         `,
-        [limit, offset]
+        values
     );
 
-    return result.rows;
+    return {
+        customers: customerResult.rows,
+        totalCount
+    };
 };
 
 exports.findCustomerById = async (id) => {
@@ -141,13 +194,55 @@ exports.deleteCustomer = async (id) => {
     return result.rows[0]
 };
 
-exports.countCustomers = async () => {
-    const result = await db.query(
-        `
-        SELECT COUNT(*) AS total
-        FROM customers
-        `
-    );
+// exports.countCustomers = async () => {
+//     const result = await db.query(
+//         `
+//         SELECT COUNT(*) AS total
+//         FROM customers
+//         `
+//     );
 
-    return Number(result.rows[0].total);
-};
+//     return Number(result.rows[0].total);
+// };
+
+// exports.filterCustomer = async (filters) => {
+//     const allowedFields = [
+//         "first_name",
+//         "last_name",
+//         "email",
+//         "phone"
+//     ];
+    
+//     const conditions = [];
+//     const values = [];
+
+//     allowedFields.forEach((field) => {
+//         if (filters[field] !== undefined) {
+//             conditions.push(`${field} = $${values.length + 1}`);
+//             values.push(filters[field]);
+//         }
+//     });
+
+//     const whereClause = 
+//         conditions.length > 0 
+//         ? `WHERE ${conditions.join(" AND ")}` 
+//         : "";    
+
+//     const query = `
+//         SELECT
+//             id,
+//             first_name,
+//             last_name,
+//             email,
+//             phone,
+//             created_at,
+//             updated_at
+//         FROM customers
+//         ${whereClause}
+//         ORDER BY created_at DESC
+//     `;
+
+//     const result = await db.query(query, values);
+
+//     return result.rows;
+// };
