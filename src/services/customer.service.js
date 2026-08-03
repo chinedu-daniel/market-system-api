@@ -1,5 +1,6 @@
 const customerRepository = require("../repositories/customer.repository");
 const AppError = require("../utils/appError");
+const { validatePagination } = require("../utils/pagination");
 
 exports.registerCustomer = async (customerData, currentUser) => {
     const existingCustomer = await customerRepository.findCustomerByEmail(customerData.email);
@@ -15,13 +16,26 @@ exports.registerCustomer = async (customerData, currentUser) => {
     return customer;
 };
 
-exports.getCustomers = async (page, limit) => {
+exports.getCustomers = async (options) => {
+    const { 
+        page,
+        limit,
+        filters
+    } = options;
+
+    validatePagination(page, limit);
+    
     const offset = (page - 1) * limit;
-    const customers = await customerRepository.findAllCustomers(limit, offset);
+    
+    const repositoryOptions = { 
+        limit, 
+        offset, 
+        filters 
+    };
 
-    const totalItems = await customerRepository.countCustomers();
+    const { customers, totalCount } = await customerRepository.findCustomers(repositoryOptions);
 
-    const totalPages = Math.ceil(totalItems / limit);
+    const totalPages = Math.ceil(totalCount / limit);
 
     const hasNextPage = page < totalPages;
 
@@ -32,7 +46,7 @@ exports.getCustomers = async (page, limit) => {
         pagination: {
             page,
             limit,
-            totalItems,
+            totalCount,
             totalPages,
             hasNextPage,
             hasPreviousPage
