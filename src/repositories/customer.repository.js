@@ -51,7 +51,8 @@ exports.findCustomers = async (options) => {
     const { 
         limit,
         offset,
-        filters
+        filters,
+        search
     } = options;
 
     const allowedFields = [
@@ -59,6 +60,12 @@ exports.findCustomers = async (options) => {
         "last_name",
         "email",
         "phone"
+    ];
+
+    const searchableFields = [
+        "first_name",
+        "last_name",
+        "email"
     ];
 
     const conditions = [];
@@ -72,6 +79,23 @@ exports.findCustomers = async (options) => {
             values.push(filters[field]);
         }
     });
+    
+
+    if (search) {
+        const searchConditions = [];
+
+        searchableFields.forEach((field) => {
+            const index = values.length + 1;
+
+            values.push(`%${search}%`);
+
+            searchConditions.push(`${field} ILIKE $${index}`);
+        });
+
+        const searchQuery = searchConditions.join(" OR ");
+
+        conditions.push(`(${searchQuery})`);
+    }
 
     const whereClause = 
         conditions.length > 0
@@ -193,56 +217,3 @@ exports.deleteCustomer = async (id) => {
 
     return result.rows[0]
 };
-
-// exports.countCustomers = async () => {
-//     const result = await db.query(
-//         `
-//         SELECT COUNT(*) AS total
-//         FROM customers
-//         `
-//     );
-
-//     return Number(result.rows[0].total);
-// };
-
-// exports.filterCustomer = async (filters) => {
-//     const allowedFields = [
-//         "first_name",
-//         "last_name",
-//         "email",
-//         "phone"
-//     ];
-    
-//     const conditions = [];
-//     const values = [];
-
-//     allowedFields.forEach((field) => {
-//         if (filters[field] !== undefined) {
-//             conditions.push(`${field} = $${values.length + 1}`);
-//             values.push(filters[field]);
-//         }
-//     });
-
-//     const whereClause = 
-//         conditions.length > 0 
-//         ? `WHERE ${conditions.join(" AND ")}` 
-//         : "";    
-
-//     const query = `
-//         SELECT
-//             id,
-//             first_name,
-//             last_name,
-//             email,
-//             phone,
-//             created_at,
-//             updated_at
-//         FROM customers
-//         ${whereClause}
-//         ORDER BY created_at DESC
-//     `;
-
-//     const result = await db.query(query, values);
-
-//     return result.rows;
-// };
