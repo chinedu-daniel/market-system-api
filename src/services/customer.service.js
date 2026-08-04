@@ -20,7 +20,8 @@ exports.getCustomers = async (options) => {
     const { 
         page,
         limit,
-        filters
+        filters,
+        search
     } = options;
 
     validatePagination(page, limit);
@@ -30,7 +31,8 @@ exports.getCustomers = async (options) => {
     const repositoryOptions = { 
         limit, 
         offset, 
-        filters 
+        filters,
+        search
     };
 
     const { customers, totalCount } = await customerRepository.findCustomers(repositoryOptions);
