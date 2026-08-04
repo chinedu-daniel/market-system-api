@@ -14,13 +14,15 @@ exports.getCustomers = asyncHandler(async (req, res) => {
     const  {
         page: pageQuery,
         limit: limitQuery,
+        search,
         ...filters
     } = req.query;
 
     const options = {
         page: Number(pageQuery) || 1, 
         limit: Number(limitQuery) || 10,
-        filters
+        filters,
+        search
     };
 
     const result = await customerService.getCustomers(options);
