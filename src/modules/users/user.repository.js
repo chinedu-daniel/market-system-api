@@ -9,12 +9,12 @@ exports.findUserByEmail = async (email) => {
   return result.rows[0];
 };
 
-exports.createUser = async ({ name, email, password }) => {
+exports.createUser = async ({ first_name, last_name, email, password }) => {
   const result = await db.query(
     `INSERT INTO users
-    (email, name, password) VALUES ($1, $2, $3) 
-    RETURNING id, name, email, role`,
-    [email, name, password]
+    (email, first_name, last_name, password) VALUES ($1, $2, $3, $4) 
+    RETURNING id, first_name, last_name, email, role`,
+    [email, first_name, last_name, password]
   );
 
   return result.rows[0];
@@ -22,7 +22,7 @@ exports.createUser = async ({ name, email, password }) => {
 
 exports.findUserById = async (id) => {
   const result = await db.query(
-    `SELECT id, name, email
+    `SELECT id, first_name, last_name, email
     FROM users
     WHERE id = $1`,
     [id]
@@ -32,16 +32,16 @@ exports.findUserById = async (id) => {
 };
 
 exports.updateUserById = async (id, updates) => {
-  const { name, email } = updates;
+  const { first_name, last_name, email } = updates;
 
   const result = await db.query(
     `
     UPDATE users
-    SET name = $1, email = $2
-    WHERE id = $3
-    RETURNING id, name, email, role
+    SET first_name = $1, last_name = $2, email = $3
+    WHERE id = $4
+    RETURNING id, first_name, last_name, email, role
     `,
-    [name, email, id]
+    [first_name, last_name, email, id]
   );
 
   return result.rows[0];
@@ -105,7 +105,7 @@ exports.savePasswordResetToken = async (userId, hashedToken, expiresAt) => {
 
 exports.findUserByPasswordResetToken = async (hashedToken) => {
   const query = `
-  SELECT id, name, email, password, role, password_reset, password_reset_expires
+  SELECT id, first_name, last_name, email, password, role, password_reset, password_reset_expires
   FROM users
   WHERE password_reset = $1
   LIMIT 1
@@ -122,7 +122,7 @@ exports.updatePasswordAfterReset = async (userId, hashedPassword) => {
   UPDATE users
   SET password = $1, password_reset = NULL, password_reset_expires = NULL
   WHERE id = $2
-  RETURNING id, name, email, role
+  RETURNING id, first_name, last_name, email, role
   `;
 
   const values = [hashedPassword, userId];
@@ -135,7 +135,7 @@ exports.saveEmailVerificationToken = async (userId, hashedToken, expiresAt) => {
   const query = `
   UPDATE users SET email_verification_token = $1, email_verification_expires = $2
   WHERE id = $3
-  RETURNING id, email, is_verified
+  RETURNING id, first_name, last_name, email, is_verified
   `;
 
   const values = [hashedToken, expiresAt, userId];
@@ -160,7 +160,7 @@ exports.markUserAsVerified = async (userId) => {
   UPDATE users
   SET is_verified = TRUE, email_verification_token = NULL, email_verification_expires = NULL
   WHERE id = $1
-  RETURNING id, name, email, role, is_verified
+  RETURNING id, first_name, last_name, email, role, is_verified
   `;
 
   const { rows } = await db.query(query, [userId]);
@@ -180,14 +180,14 @@ exports.findUserByGoogleId = async (googleId) => {
   return rows[0];
 };
 
-exports.createGoogleUser = async ({ name, email, googleId }) => {
+exports.createGoogleUser = async ({ first_name, last_name, email, googleId }) => {
   const query = `
-  INSERT INTO users (name, email, google_id, auth_provider, is_verified)
-  VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, name, email, role, is_verified
+  INSERT INTO users (first_name, last_name, email, google_id, auth_provider, is_verified)
+  VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, first_name, last_name, email, role, is_verified
   `;
 
-  const values = [name, email, googleId, "google", true];
+  const values = [first_name, last_name, email, googleId, "google", true];
 
   const { rows } = await db.query(query, values);
 
@@ -199,7 +199,7 @@ exports.linkGoogleAccount = async (userId, googleId) => {
   UPDATE users
   SET google_id = $1, auth_provider = $2, is_verified = $3
   WHERE id = $4
-  RETURNING id, name, email, role, is_verified, google_id, auth_provider
+  RETURNING id, first_name, last_name, email, role, is_verified, google_id, auth_provider
   `;
 
   const values = [googleId, "google", true, userId];
