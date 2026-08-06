@@ -12,7 +12,7 @@ const { registerCustomerSchema } = require("./customer.schema");
 router.post(
     "/",
     protect,
-    authorize("admin", "sales"),
+    authorize("admin", "staff"),
     validate(registerCustomerSchema),
     customerController.registerCustomer
 );
@@ -20,28 +20,28 @@ router.post(
 router.get(
     "/",
     protect,
-    authorize("admin", "sales"),
+    authorize("admin", "staff"),
     customerController.getCustomers
 );
 
 router.get(
     "/:id",
     protect,
-    authorize("admin", "sales"),
+    authorize("admin", "staff"),
     customerController.getCustomerById
 );
 
 router.patch(
     "/:id",
     protect,
-    authorize("admin", "sales"),
+    authorize("admin"),
     customerController.updateCustomer
 );
 
 router.delete(
     "/:id",
     protect,
-    authorize("admin", "sales"),
+    authorize("admin"),
     customerController.deleteCustomer
 );
 
