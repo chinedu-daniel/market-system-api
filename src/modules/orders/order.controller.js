@@ -20,3 +20,15 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
 
     next();
 });
+
+exports.getAllOrders = asyncHandler(async (req, res, next) => {
+    const orders = await orderService.getAllOrders();
+
+    res.status(200).json({
+        success: true,
+        results: orders.length,
+        data: orders
+    });
+
+    next();
+});
