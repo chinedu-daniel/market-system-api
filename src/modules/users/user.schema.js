@@ -1,8 +1,14 @@
 const Joi = require("joi");
 
 const signupSchema = Joi.object ({
-    name: Joi.string()
-    .min(3)
+    first_name: Joi.string()
+    .min(2)
+    .max(100)
+    .required(),
+
+    last_name: Joi.string()
+    .min(2)
+    .max(100)
     .required(),
 
     email: Joi.string()
@@ -25,8 +31,14 @@ const loginSchema = Joi.object({
 });
 
 const updateUserSchema = Joi.object({
-    name: Joi.string()
-    .min(3)
+    first_name: Joi.string()
+    .min(2)
+    .max(100)
+    .required(),
+
+    last_name: Joi.string()
+    .min(2)
+    .max(100)
     .required(),
 
     email: Joi.string()
