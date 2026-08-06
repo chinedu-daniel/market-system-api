@@ -15,7 +15,7 @@ const { sendVerificationEmail } = require("../../utils/email/verificationEmail")
 const { sendPasswordResetEmail } = require("../../utils/email/passwordResetEmail");
 
 exports.signup = async (data) => {
-    const { name, email, password } = data;
+    const { first_name, last_name, email, password } = data;
 
     const existingUser = await userRepository.findUserByEmail(email);
 
@@ -26,7 +26,8 @@ exports.signup = async (data) => {
     const hashedPassword = await hashPassword(password);
 
     const newUser = await userRepository.createUser({
-        name,
+        first_name,
+        last_name,
         email,
         password: hashedPassword
     });
@@ -66,7 +67,8 @@ exports.signup = async (data) => {
     return { 
         user: {
             id: newUser.id,
-            name: newUser.name,
+            first_name: newUser.first_name,
+            last_name: newUser.last_name,
             email: newUser.email,
             role: newUser.role
         }
@@ -101,7 +103,8 @@ exports.login = async (data) => {
     return {
         user: {
             id: user.id,
-            name: user.name,
+            first_name: user.first_name,
+            last_name: user.last_name,
             email: user.email,
             role: user.role
         },
@@ -318,7 +321,7 @@ exports.googleLogin = async (credential) => {
         throw new AppError("Invalid Google credential", 401);
     }
 
-    const { googleId, email, name, emailVerified } = googleUser;
+    const { googleId, email, first_name, last_name, emailVerified } = googleUser;
 
     if (!emailVerified) {
         throw new AppError("Google account email is not verified", 400);
@@ -337,7 +340,7 @@ exports.googleLogin = async (credential) => {
         } else {
             // create brand new google account
             user = await userRepository.createGoogleUser({
-                id, name, email, role
+                id, first_name, last_name, email, role
             });
         }
     }
