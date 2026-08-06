@@ -13,3 +13,7 @@ exports.createOrder = async(customerId, totalAmount) => {
 
     return order;
 };
+
+exports.getAllOrders = async() => {
+    return await orderRepository.findAllOrders();
+};
