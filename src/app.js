@@ -1,8 +1,8 @@
 const express = require("express");
 
 const errorMiddleware = require("./middleware/error.middleware");
-const userRoutes = require("./routes/user.routes");
-const customerRoutes = require("./routes/customer.routes");
+const { userRoutes } = require("./modules/users");
+const { customerRoutes } = require("./modules/customers");
 
 const app = express();
 
