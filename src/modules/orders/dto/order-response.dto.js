@@ -9,6 +9,7 @@ exports.toOrderResponse = (order) => {
         },
 
         totalAmount: Number(order.total_amount),
+        status: order.status,
         createdAt: order.created_at
     };
 }
