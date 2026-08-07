@@ -67,8 +67,8 @@ exports.signup = async (data) => {
     return { 
         user: {
             id: newUser.id,
-            first_name: newUser.first_name,
-            last_name: newUser.last_name,
+            firstName: newUser.first_name,
+            lastName: newUser.last_name,
             email: newUser.email,
             role: newUser.role
         }
