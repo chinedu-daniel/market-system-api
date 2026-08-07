@@ -18,6 +18,10 @@ exports.createOrder = async(customerId, totalAmount) => {
 exports.getAllOrders = async() => {
     const order = await orderRepository.findAllOrders();
 
+    if (!order) {
+        throw new AppError("Order not found", 404);
+    }
+
     return order.map(toOrderResponse);
 };
 
