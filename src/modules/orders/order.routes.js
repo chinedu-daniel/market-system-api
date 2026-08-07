@@ -19,4 +19,11 @@ router.get(
     orderController.getAllOrders
 );
 
+router.get(
+    "/:id",
+    protect,
+    authorize("admin", "staff"),
+    orderController.getOrderById
+);
+
 module.exports = router;
