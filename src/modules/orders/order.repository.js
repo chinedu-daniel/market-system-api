@@ -26,6 +26,7 @@ exports.findOrderById = async (id) => {
             c.last_name,
             c.email,
             o.total_amount,
+            o.status,
             o.created_at
         FROM orders o
         JOIN customers c
