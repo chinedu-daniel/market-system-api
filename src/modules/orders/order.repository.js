@@ -16,6 +16,28 @@ exports.createOrder = async (customerId, totalAmount) => {
     return result.rows[0];
 };
 
+exports.findOrderById = async (id) => {
+    const result = await db.query(
+        `
+        SELECT 
+            o.id,
+            c.id AS customer_id,
+            c.first_name,
+            c.last_name,
+            c.email,
+            o.total_amount,
+            o.created_at
+        FROM orders o
+        JOIN customers c
+            ON o.customer_id = c.id
+        WHERE o.id = $1
+        `,
+        [id]
+    );
+
+    return result.rows[0];
+};
+
 exports.findAllOrders = async () => {
     const result = await db.query(
         `
