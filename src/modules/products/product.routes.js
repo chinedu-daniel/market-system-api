@@ -12,4 +12,11 @@ router.post(
     productController.createProduct
 );
 
+router.get(
+    "/",
+    protect,
+    authorize("admin", "staff"),
+    productController.getProduct
+);
+
 module.exports = router;
