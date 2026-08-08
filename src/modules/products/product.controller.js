@@ -10,3 +10,13 @@ exports.createProduct = asyncHandler(async (req, res) => {
         data: product
     });
 });
+
+exports.getProduct = asyncHandler(async (req, res) => {
+    const product = await productService.getProducts(req.body)
+
+    res.status(200).json({
+        status: true,
+        results: product.length,
+        data: product
+    });
+});
