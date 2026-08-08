@@ -50,7 +50,7 @@ exports.createProduct = async ({
     return result.rows[0];
 };
 
-exports.findAllProducts = async () => {
+exports.findAllProducts = async (limit, offset) => {
     const result = await db.query(
         `
         SELECT 
@@ -63,7 +63,11 @@ exports.findAllProducts = async () => {
             updated_at
         FROM products
         ORDER BY created_at DESC
+        LIMIT $1
+        OFFSET $2
         `,
+
+        [limit, offset]
     );
 
     return result.rows;
