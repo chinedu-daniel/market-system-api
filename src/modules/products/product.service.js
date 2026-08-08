@@ -21,3 +21,9 @@ exports.createProduct = async(productData) => {
 
     return toProductResponse(product);
 }
+
+exports.getProducts = async () => {
+    const product = await productRepository.findAllProducts();
+
+    return product.map(toProductResponse);
+};
