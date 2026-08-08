@@ -22,8 +22,10 @@ exports.createProduct = async(productData) => {
     return toProductResponse(product);
 }
 
-exports.getProducts = async () => {
-    const product = await productRepository.findAllProducts();
+exports.getProducts = async (page, limit) => {
+    const offset = (page - 1) * limit;
+
+    const product = await productRepository.findAllProducts(limit, offset);
 
     return product.map(toProductResponse);
 };
