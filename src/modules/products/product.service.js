@@ -25,7 +25,22 @@ exports.createProduct = async(productData) => {
 exports.getProducts = async (page, limit) => {
     const offset = (page - 1) * limit;
 
-    const product = await productRepository.findAllProducts(limit, offset);
+    const products = await productRepository.findAllProducts(
+        limit,
+        offset
+    );
 
-    return product.map(toProductResponse);
+    const totalItems = await productRepository.countProducts();
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+        products: products.map(toProductResponse),
+        pagination: {
+            page,
+            limit,
+            totalItems,
+            totalPages
+        }
+    };
 };
