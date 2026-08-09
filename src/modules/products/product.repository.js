@@ -72,3 +72,14 @@ exports.findAllProducts = async (limit, offset) => {
 
     return result.rows;
 };
+
+exports.countProducts = async() => {
+    const result = await db.query(
+        `
+        SELECT COUNT(*) AS total
+        FROM products
+        `
+    );
+    
+    return Number(result.rows[0].total);
+};
