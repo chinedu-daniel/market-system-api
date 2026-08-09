@@ -15,14 +15,17 @@ exports.getProduct = asyncHandler(async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
-    const products = await productService.getProducts(
+    const result = await productService.getProducts(
         page,
         limit
     );
 
+    console.log("SERVICE RESULT:", result);
+
     res.status(200).json({
-        status: true,
-        results: products.length,
-        data: products
+        success: true,
+        results: result.products.length,
+        pagination: result.pagination,
+        data: result.products
     });
 });
