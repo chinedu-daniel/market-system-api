@@ -197,3 +197,23 @@ exports.countProducts = async(filters = {}) => {
 
     return Number(result.rows[0].total);
 };
+
+exports.findProductById = async (id) => {
+    const result = await db.query(
+        `
+        SELECT 
+            id,
+            name,
+            description,
+            price,
+            quantity,
+            created_at,
+            updated_at
+        FROM products
+        WHERE id = $1
+        `,
+        [id]
+    );
+
+    return result.rows[0];
+};
