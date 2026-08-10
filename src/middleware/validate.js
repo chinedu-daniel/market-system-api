@@ -1,9 +1,8 @@
-function validate(schema) {
+function validate(schema,source = "body") {
     return function(req, res, next) {
-        const { error } = schema.validate(req.body);
+        const { error } = schema.validate(req[source]);
         
         if (error) {
-            // const error = new Error("Email is required");
             return next(error);
         }
         
