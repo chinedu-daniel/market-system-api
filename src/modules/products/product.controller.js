@@ -15,9 +15,16 @@ exports.getProduct = asyncHandler(async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
+    const filters = {
+        name: req.query.name,
+        minPrice: req.query.minPrice,
+        maxPrice: req.query.maxPrice
+    };
+
     const result = await productService.getProducts(
         page,
-        limit
+        limit,
+        filters
     );
 
     console.log("SERVICE RESULT:", result);
