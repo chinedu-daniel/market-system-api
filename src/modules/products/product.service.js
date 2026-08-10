@@ -3,13 +3,10 @@ const { toProductResponse } = require("./dto/product-response.dto");
 const productRepository = require("./product.repository");
 
 exports.createProduct = async(productData) => {
-    // console.log("SERVICE productData:", productData);
 
     const { name } = productData;
 
     const existingProduct = await productRepository.findProductByName(name);
-
-    // console.log("EXISTING PRODUCT:", existingProduct);
 
     if (existingProduct) {
         throw new AppError("Product already exists", 409)
@@ -17,25 +14,20 @@ exports.createProduct = async(productData) => {
 
     const product = await productRepository.createProduct(productData);
 
-    // console.log("CREATED PRODUCT:", product);
-
     return toProductResponse(product);
 }
 
-exports.getProducts = async (page, limit, filters) => {
+exports.getProducts = async (page, limit, filters, sort) => {
     const offset = (page - 1) * limit;
 
     const products = await productRepository.findAllProducts(
         limit,
         offset,
-        filters
+        filters,
+        sort
     );
 
-    console.log("PRODUCTS:", products);
-
     const totalItems = await productRepository.countProducts(filters);
-
-    console.log("TOTAL ITEMS:", totalItems);
 
     const totalPages = Math.ceil(totalItems / limit);
 
