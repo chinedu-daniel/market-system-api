@@ -16,6 +16,7 @@ exports.getProduct = asyncHandler(async (req, res) => {
     const limit = Number(req.query.limit) || 10;
 
     const filters = {
+        search: req.query.search,
         name: req.query.name,
         minPrice: req.query.minPrice,
         maxPrice: req.query.maxPrice
