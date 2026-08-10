@@ -61,6 +61,17 @@ exports.findAllProducts = async (limit, offset, filters = {}) => {
     const conditions = [];
     const values = [];
 
+    if (filters.search) {
+        values.push(`%${filters.search}%`);
+
+        conditions.push(`
+            (
+                name ILIKE $${values.length}
+                OR description ILIKE $${values.length}
+            )
+        `);
+    }
+
     for (const field of allowedFields) {
         if (filters[field]) {
             values.push(filters[field]);
@@ -130,6 +141,17 @@ exports.countProducts = async(filters = {}) => {
 
     const conditions = [];
     const values = [];
+
+    if (filters.search) {
+        values.push(`%${filters.search}%`);
+
+        conditions.push(`
+            (
+                name ILIKE $${values.length}
+                OR description ILIKE $${values.length}
+            )
+        `);
+    }
 
     for (const field of allowedFields) {
         if (filters[field]) {
