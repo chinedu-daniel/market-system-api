@@ -50,7 +50,55 @@ exports.createProduct = async ({
     return result.rows[0];
 };
 
-exports.findAllProducts = async (limit, offset) => {
+exports.findAllProducts = async (limit, offset, filters = {}) => {
+
+    const allowedFields = [
+        "name",
+        "minPrice",
+        "maxPrice"
+    ];
+
+    const conditions = [];
+    const values = [];
+
+    for (const field of allowedFields) {
+        if (filters[field]) {
+            values.push(filters[field]);
+
+            if (field === "name") {
+                conditions.push(`name = $${values.length}`);
+            }
+
+            if (field === "minPrice") {
+                conditions.push(`price >= $${values.length}`);
+            }
+
+            if (field === "maxPrice") {
+                conditions.push(`price <= $${values.length}`);
+            }
+        }
+    };
+
+    const whereClause = 
+        conditions.length > 0 
+        ? `WHERE ${conditions.join(" AND ")}` 
+        : "";
+
+    values.push(limit);
+    const limitPlaceholder = `$${values.length}`;
+
+    values.push(offset);
+    const offsetPlaceholder = `$${values.length}`;
+
+    console.log("FIND ALL INPUT:", {
+        limit,
+        offset,
+        filters
+    });
+
+    console.log("WHERE CLAUSE:", whereClause);
+    console.log("VALUES:", values);
+
     const result = await db.query(
         `
         SELECT 
@@ -62,24 +110,66 @@ exports.findAllProducts = async (limit, offset) => {
             created_at,
             updated_at
         FROM products
+        ${whereClause}
         ORDER BY created_at DESC
-        LIMIT $1
-        OFFSET $2
+        LIMIT ${limitPlaceholder}
+        OFFSET ${offsetPlaceholder}
         `,
-
-        [limit, offset]
+        values
     );
 
     return result.rows;
 };
 
-exports.countProducts = async() => {
+exports.countProducts = async(filters = {}) => {
+    const allowedFields = [
+        "name",
+        "minPrice",
+        "maxPrice"
+    ];
+
+    const conditions = [];
+    const values = [];
+
+    for (const field of allowedFields) {
+        if (filters[field]) {
+            values.push(filters[field]);
+
+            if (field === "name"){
+                conditions.push(`name = $${values.length}`);
+            }
+
+            if (field === "minPrice"){
+                conditions.push(`price >= $${values.length}`);
+            }
+
+            if (field === "maxPrice"){
+                conditions.push(`price <= $${values.length}`);
+            }
+        }
+    }
+
+    const whereClause = 
+        conditions.length > 0 ?  
+        `WHERE ${conditions.join(" AND ")}` 
+        : "";
+
+
+    console.log("COUNT INPUT:", {
+        filters
+    });
+
+    console.log("COUNT WHERE:", whereClause);
+    console.log("COUNT VALUES:", values);
+    
     const result = await db.query(
         `
         SELECT COUNT(*) AS total
         FROM products
-        `
+        ${whereClause}
+        `,
+        values
     );
-    
+
     return Number(result.rows[0].total);
 };
