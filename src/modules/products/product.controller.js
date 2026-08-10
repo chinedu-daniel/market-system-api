@@ -22,13 +22,14 @@ exports.getProduct = asyncHandler(async (req, res) => {
         maxPrice: req.query.maxPrice
     };
 
+    const sort = req.query.sort || "newest";
+
     const result = await productService.getProducts(
         page,
         limit,
-        filters
+        filters,
+        sort
     );
-
-    console.log("SERVICE RESULT:", result);
 
     res.status(200).json({
         success: true,
