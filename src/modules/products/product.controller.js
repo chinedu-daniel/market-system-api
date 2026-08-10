@@ -38,3 +38,12 @@ exports.getProduct = asyncHandler(async (req, res) => {
         data: result.products
     });
 });
+
+exports.getProductById = asyncHandler(async (req, res) => {
+    const product = await productService.getProductById(req.params.id);
+
+    res.status(200).json({
+        success: true,
+        data: product
+    });
+});
