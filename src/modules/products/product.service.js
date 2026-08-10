@@ -41,3 +41,15 @@ exports.getProducts = async (page, limit, filters, sort) => {
         }
     };
 };
+
+exports.getProductById = async (id) => {
+    const product = await productRepository.findProductById(id);
+
+    if (!product) {
+        throw new AppError(
+            "Product not found", 404
+        );
+    }
+
+    return toProductResponse(product);
+};
