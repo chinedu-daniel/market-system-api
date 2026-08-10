@@ -50,7 +50,16 @@ exports.createProduct = async ({
     return result.rows[0];
 };
 
-exports.findAllProducts = async (limit, offset, filters = {}) => {
+exports.findAllProducts = async (limit, offset, filters = {}, sort = "newest") => {
+
+    const allowedSorts = {
+        newest: "created_at DESC",
+        oldest: "created_at ASC",
+        price_desc: "PRICE DESC",
+        price_asc: "PRICE ASC",
+        name_asc: "NAME ASC",
+        name_desc: "NAME_DESC"
+    };
 
     const allowedFields = [
         "name",
@@ -60,17 +69,6 @@ exports.findAllProducts = async (limit, offset, filters = {}) => {
 
     const conditions = [];
     const values = [];
-
-    if (filters.search) {
-        values.push(`%${filters.search}%`);
-
-        conditions.push(`
-            (
-                name ILIKE $${values.length}
-                OR description ILIKE $${values.length}
-            )
-        `);
-    }
 
     for (const field of allowedFields) {
         if (filters[field]) {
@@ -90,25 +88,29 @@ exports.findAllProducts = async (limit, offset, filters = {}) => {
         }
     };
 
+    if (filters.search) {
+        values.push(`%${filters.search}%`);
+
+        conditions.push(`
+            (
+                name ILIKE $${values.length}
+                OR description ILIKE $${values.length}
+            )
+        `);
+    }
+
     const whereClause = 
         conditions.length > 0 
         ? `WHERE ${conditions.join(" AND ")}` 
         : "";
+
+    const orderBy = allowedSorts[sort] || allowedSorts.newest;
 
     values.push(limit);
     const limitPlaceholder = `$${values.length}`;
 
     values.push(offset);
     const offsetPlaceholder = `$${values.length}`;
-
-    console.log("FIND ALL INPUT:", {
-        limit,
-        offset,
-        filters
-    });
-
-    console.log("WHERE CLAUSE:", whereClause);
-    console.log("VALUES:", values);
 
     const result = await db.query(
         `
@@ -122,7 +124,7 @@ exports.findAllProducts = async (limit, offset, filters = {}) => {
             updated_at
         FROM products
         ${whereClause}
-        ORDER BY created_at DESC
+        ORDER BY ${orderBy}
         LIMIT ${limitPlaceholder}
         OFFSET ${offsetPlaceholder}
         `,
