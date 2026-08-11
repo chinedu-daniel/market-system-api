@@ -5,6 +5,7 @@ exports.toProductResponse = (product) => {
         description: product.description,
         price: Number(product.price),
         quantity: product.quantity,
+        isActive: product.is_active,
         createdAt: product.created_at,
         updatedAt: product.updated_at
     };
