@@ -65,3 +65,19 @@ exports.updateProduct = async (id, updates) => {
 
     return toProductResponse(updatedProduct);
 }
+
+exports.deleteProduct = async (id) => {
+    const existingProduct = await productRepository.findProductById(id);
+
+    if (!existingProduct) {
+        throw new AppError("Product not found", 404);
+    }
+
+    if (!existingProduct.is_active) {
+        throw new AppError("Product is already inactive", 400);
+    }
+
+    const deletedProduct = await productRepository.deleteProduct(id);
+
+    return toProductResponse(deletedProduct);
+};
