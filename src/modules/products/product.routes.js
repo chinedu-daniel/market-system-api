@@ -5,7 +5,7 @@ const productController = require("./product.controller");
 const protect = require("../../middleware/auth.middleware");
 const authorize = require("../../middleware/authorize.middleware");
 const validate = require("../../middleware/validate");
-const { productIdSchema } = require("./product.validator");
+const { productIdSchema, productUpdateSchema } = require("./product.validator");
 
 router.post(
     "/", 
@@ -27,6 +27,15 @@ router.get(
     authorize("admin", "staff"),
     validate(productIdSchema, "params"),
     productController.getProductById
+);
+
+router.patch(
+    "/:id",
+    protect,
+    authorize("admin", "staff"),
+    validate(productIdSchema, "params"),
+    validate(productUpdateSchema, "body"),
+    productController.updateProduct
 );
 
 module.exports = router;
