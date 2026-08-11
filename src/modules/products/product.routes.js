@@ -38,4 +38,12 @@ router.patch(
     productController.updateProduct
 );
 
+router.delete(
+    "/:id",
+    protect,
+    authorize("admin"),
+    validate(productIdSchema, "params"),
+    productController.deleteProduct
+);
+
 module.exports = router;
