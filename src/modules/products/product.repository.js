@@ -217,3 +217,44 @@ exports.findProductById = async (id) => {
 
     return result.rows[0];
 };
+
+exports.updateProduct = async (id, updates) => {
+    const allowedFields = [
+        "name",
+        "description",
+        "price",
+        "quantity"
+    ];
+
+    const fields = [];
+    const values = [];
+
+    for (const field of allowedFields) {
+        if (updates[field] !== undefined) {
+            values.push(updates[field]);
+            fields.push(`${field} = $${values.length}`);
+        }
+    }
+
+    values.push(id);
+
+    const result = await db.query(
+        `
+        UPDATE products
+        SET ${fields.join(", ")},
+            updated_at = NOW()
+        WHERE id = $${values.length}
+        RETURNING
+            id,
+            name,
+            description,
+            price,
+            quantity,
+            created_at,
+            updated_at
+        `,
+        values
+    );
+
+    return result.rows[0];
+};
