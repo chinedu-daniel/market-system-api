@@ -47,3 +47,13 @@ exports.getProductById = asyncHandler(async (req, res) => {
         data: product
     });
 });
+
+exports.updateProduct = asyncHandler(async(req, res) => {
+    const updatedProduct = await productService.updateProduct(req.params.id, req.body);
+
+    res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
+        data: updatedProduct
+    });
+});
