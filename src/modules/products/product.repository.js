@@ -207,6 +207,7 @@ exports.findProductById = async (id) => {
             description,
             price,
             quantity,
+            is_active,
             created_at,
             updated_at
         FROM products
@@ -254,6 +255,29 @@ exports.updateProduct = async (id, updates) => {
             updated_at
         `,
         values
+    );
+
+    return result.rows[0];
+};
+
+exports.deleteProduct = async (id) => {
+    const result = await db.query(
+        `
+        UPDATE products
+        SET is_active = false,
+            updated_at = NOW()
+        WHERE id = $1
+        RETURNING
+            id,
+            name,
+            description,
+            price,
+            quantity,
+            is_active,
+            created_at,
+            updated_at
+        `,
+        [id]
     );
 
     return result.rows[0];
