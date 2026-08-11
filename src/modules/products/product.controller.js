@@ -57,3 +57,13 @@ exports.updateProduct = asyncHandler(async(req, res) => {
         data: updatedProduct
     });
 });
+
+exports.deleteProduct = asyncHandler(async (req,res) => {
+    const product = await productService.deleteProduct(req.params.id);
+
+    res.status(200).json({
+        success: true,
+        message: "Product deleted successfully",
+        data: product
+    });
+});
