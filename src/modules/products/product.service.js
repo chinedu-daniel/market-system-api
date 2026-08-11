@@ -53,3 +53,15 @@ exports.getProductById = async (id) => {
 
     return toProductResponse(product);
 };
+
+exports.updateProduct = async (id, updates) => {
+    const existingProduct = await productRepository.findProductById(id);
+
+    if (!existingProduct) {
+        throw new AppError("Product not found", 404);
+    }
+
+    const updatedProduct = await productRepository.updateProduct(id, updates);
+
+    return toProductResponse(updatedProduct);
+}
