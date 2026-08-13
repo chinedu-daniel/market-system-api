@@ -1,7 +1,11 @@
 const db = require("../../db/database");
 
-exports.createOrder = async (customerId, totalAmount) => {
-    const result = await db.query(
+exports.createOrder = async ({
+    client,
+    customerId,
+    totalAmount
+}) => {
+    const result = await client.query(
         `
         INSERT INTO orders (
             customer_id,
