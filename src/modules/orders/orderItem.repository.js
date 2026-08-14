@@ -7,7 +7,7 @@ exports.createOrderItem = async ({
 }) => {
     const result = await client.query(
         `
-        INSER INTO order_items
+        INSERT INTO order_items
         (
             order_id,
             product_id,
