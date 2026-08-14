@@ -3,6 +3,7 @@ const customerRepository = require('../customers/customer.repository');
 const { toOrderResponse } = require('./dto/order-response.dto');
 const orderRepository = require('./order.repository');
 const productRepository = require("../products/product.repository");
+const orderItemRepository = require("./orderItem.repository");
 
 exports.createOrder = async({
     client,
@@ -64,6 +65,17 @@ exports.createOrder = async({
     return toOrderResponse(order);
 
     // 7. create order items
+    for (const item of sortedItems) {
+        const product = products.find(product => product.id === item.productId);
+
+        await orderItemRepository.createOrderItem({
+            client,
+            orderId: order.id,
+            productId: item.productId,
+            quantity: item.quantity,
+            unitPrice: product.price
+        });
+    }
 
 
     // 8. reduce stock
