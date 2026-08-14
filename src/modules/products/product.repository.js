@@ -319,6 +319,7 @@ exports.reduceStock = async ({
         SET quantity = quantity - $1,
             updated_at = NOW()
         WHERE id = $2
+            AND quantity >= $1
         RETURNING 
             id,
             name,
