@@ -54,15 +54,12 @@ exports.createOrder = async({
         totalAmount += Number(product.price) * item.quantity;
     }
 
-
     // 6. create order
     const order = await orderRepository.createOrder({
         client,
         customerId,
         totalAmount
     });
-
-    return toOrderResponse(order);
 
     // 7. create order items
     for (const item of sortedItems) {
@@ -79,6 +76,15 @@ exports.createOrder = async({
 
 
     // 8. reduce stock
+    for (const item of sortedItems) {
+        await productRepository.reduceStock({
+            client,
+            productId: item.productId,
+            quantity: item.quantity
+        });
+    }
+
+    return toOrderResponse(order);
 };
 
 exports.getAllOrders = async() => {
