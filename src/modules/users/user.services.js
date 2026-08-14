@@ -59,10 +59,6 @@ exports.signup = async (data) => {
             rawToken
         );
     }
-    // await sendVerificationEmail(
-    //     newUser,
-    //     rawToken
-    // );
 
     return { 
         user: {
