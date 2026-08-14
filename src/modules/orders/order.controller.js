@@ -2,14 +2,14 @@ const asyncHandler = require("../../utils/asyncHandler");
 const orderService = require("./order.service");
 
 exports.createOrder = asyncHandler(async (req, res, next) => {
-    const { 
+    const {
         customer_id,
-        total_amount
+        items
     } = req.body;
 
     const order = await orderService.createOrder(
         customer_id,
-        total_amount
+        items
     );
 
     res.status(201).json({
