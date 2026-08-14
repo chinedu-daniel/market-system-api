@@ -20,13 +20,14 @@ exports.findProductByName = async (name) => {
     return result.rows[0];
 };
 
-exports.createProduct = async ({ 
+exports.createProduct = async ({
+    client,
     name,
     description,
     price,
     quantity
 }) => {
-    const result = await db.query(
+    const result = await client.query(
         `
         INSERT INTO products (
             name,
@@ -278,6 +279,30 @@ exports.deleteProduct = async (id) => {
             updated_at
         `,
         [id]
+    );
+
+    return result.rows[0];
+};
+
+exports.findProductForUpdate = async ({
+    client,
+    productId
+}) => {
+    const result = await client.query(
+        `
+        SELECT
+            id,
+            name,
+            description,
+            price,
+            quantity,
+            created_at,
+            updated_at
+        FROM products
+        WHERE id = $1
+        FOR UPDATE
+        `,
+        [productId]
     );
 
     return result.rows[0];
