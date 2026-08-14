@@ -2,17 +2,65 @@ const AppError = require('../../utils/appError');
 const customerRepository = require('../customers/customer.repository');
 const { toOrderResponse } = require('./dto/order-response.dto');
 const orderRepository = require('./order.repository');
+const productRepository = require("../products/product.repository");
 
-exports.createOrder = async(customerId, totalAmount) => {
+exports.createOrder = async({
+    client,
+    customerId,
+    items
+}) => {
     const existingCustomer = await customerRepository.findCustomerById(customerId);
 
+    // 1. check customer
     if (!existingCustomer) {
         throw new AppError("Customer not found", 404);
     }
 
-    const order = await orderRepository.createOrder(customerId, totalAmount);
+    // 2. sort items
+    const sortedItems = [...items].sort((a, b) => a.productId - b.productId);
+
+    // 3. lock products
+    const products = [];
+
+    for (const item of sortedItems) {
+        const product = await productRepository.findProductForUpdate({
+            client,
+            productId: item.productId
+        });
+
+        if (!product) {
+            throw new AppError(`Product ${item.productId} not found`, 404);
+        }
+
+        products.push(product);
+    }
+
+    // 4. check stock
+    for (const item of sortedItems) {
+        const product = products.find(product => product.id === item.productId);
+
+        if (product.quantity < item.quantity) {
+            throw new AppError(`Insufficient stock for ${product.name}`, 400);
+        }
+    }
+
+
+    // 5. Calculate total
+
+
+    // 6. create order
+    const order = await orderRepository.createOrder({
+        client,
+        customerId,
+        totalAmount
+    });
 
     return toOrderResponse(order);
+
+    // 7. create order items
+
+
+    // 8. reduce stock
 };
 
 exports.getAllOrders = async() => {
