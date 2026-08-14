@@ -307,3 +307,26 @@ exports.findProductForUpdate = async ({
 
     return result.rows[0];
 };
+
+exports.reduceStock = async ({
+    client,
+    productId,
+    quantity
+}) => {
+    const result = await client.query(
+        `
+        UPDATE products
+        SET quantity = quantity - $1,
+            updated_at = NOW()
+        WHERE id = $2
+        RETURNING 
+            id,
+            name,
+            quantity,
+            updated_at
+        `,
+        [quantity, productId]
+    );
+
+    return result.rows[0];
+};
