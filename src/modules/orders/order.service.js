@@ -44,8 +44,14 @@ exports.createOrder = async({
         }
     }
 
-
     // 5. Calculate total
+    let totalAmount = 0;
+
+    for (const item of sortedItems) {
+        const product = products.find(product => product.id === item.productId);
+
+        totalAmount += Number(product.price) * item.quantity;
+    }
 
 
     // 6. create order
