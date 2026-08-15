@@ -146,8 +146,11 @@ exports.findCustomers = async (options) => {
     };
 };
 
-exports.findCustomerById = async (id) => {
-    const result = await db.query(
+exports.findCustomerById = async ({
+    client,
+    customerId
+}) => {
+    const result = await client.query(
         `
         SELECT 
             id,
@@ -160,7 +163,7 @@ exports.findCustomerById = async (id) => {
         FROM customers
         WHERE id = $1
         `,
-        [id]
+        [customerId]
     );
 
     return result.rows[0];
