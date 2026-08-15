@@ -1,3 +1,4 @@
+const withTransaction = require("../../db/transaction");
 const asyncHandler = require("../../utils/asyncHandler");
 const orderService = require("./order.service");
 
@@ -7,10 +8,13 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
         items
     } = req.body;
 
-    const order = await orderService.createOrder(
-        customer_id,
-        items
-    );
+    const order = await withTransaction((client) => {
+        return orderService.createOrder({
+            client,
+            customerId: customer_id,
+            items
+        });
+    });
 
     res.status(201).json({
         success: true,
@@ -18,7 +22,7 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
         data: order
     });
 
-    next();
+    // next();
 });
 
 exports.getAllOrders = asyncHandler(async (req, res, next) => {
