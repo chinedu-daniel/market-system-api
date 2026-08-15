@@ -10,7 +10,10 @@ exports.createOrder = async({
     customerId,
     items
 }) => {
-    const existingCustomer = await customerRepository.findCustomerById(customerId);
+    const existingCustomer = await customerRepository.findCustomerById({
+        client,
+        customerId
+    });
 
     // 1. check customer
     if (!existingCustomer) {
