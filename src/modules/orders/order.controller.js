@@ -2,7 +2,7 @@ const withTransaction = require("../../db/transaction");
 const asyncHandler = require("../../utils/asyncHandler");
 const orderService = require("./order.service");
 
-exports.createOrder = asyncHandler(async (req, res, next) => {
+exports.createOrder = asyncHandler(async (req, res) => {
     const {
         customer_id,
         items
@@ -21,8 +21,6 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
         message: "Order created successfully",
         data: order
     });
-
-    // next();
 });
 
 exports.getAllOrders = asyncHandler(async (req, res, next) => {
