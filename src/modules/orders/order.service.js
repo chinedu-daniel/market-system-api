@@ -10,12 +10,21 @@ exports.createOrder = async({
     customerId,
     items
 }) => {
+    // checking duplicate product
+    const productIds = items.map(item => item.productId);
+
+    const uniqueProductIds = new Set(productIds);
+
+    if (uniqueProductIds.size !== productIds.length) {
+        throw new AppError("An order cannot contain the same product more than once", 400);
+    }
+
+    // 1. check customer
     const existingCustomer = await customerRepository.findCustomerById({
         client,
         customerId
     });
 
-    // 1. check customer
     if (!existingCustomer) {
         throw new AppError("Customer not found", 404);
     }
