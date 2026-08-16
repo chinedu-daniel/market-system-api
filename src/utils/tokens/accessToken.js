@@ -7,7 +7,7 @@ function generateToken(user) {
             email: user.email,
             role: user.role
         },
-        "my_super_secret_key",
+        process.env.JWT_SECRET,
         {
             expiresIn: "1h"
         }
