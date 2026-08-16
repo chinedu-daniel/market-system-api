@@ -7,7 +7,7 @@ function generateRefreshToken(user) {
             email: user.email,
             role: user.role
         },
-        "my_refresh_secret_key",
+        process.env.JWT_REFRESH_SECRET,
         {
             expiresIn: "7d"
         }
