@@ -20,7 +20,7 @@ function protect(req, res, next) {
         req.user = decoded;
 
         next();
-    } catch (err) {
+    } catch (error) {
         next(new AppError("Invalid or expired token", 401));
     }
 }
