@@ -13,7 +13,9 @@ const files = fs
 // console.log(files);
 
 async function getExecutedMigrations() {
-    const result = await db.query("SELECT filename FROM schema_migrations ORDER BY id");
+    const result = await db.query(
+        "SELECT filename FROM schema_migrations ORDER BY id"
+    );
 
     return result.rows.map((row) => row.filename);
 }
