@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const db = require("../db/database");
-// const { error } = require("console");
 
 const migrationsDir = path.join(__dirname, "migrations");
 
@@ -9,8 +8,6 @@ const files = fs
     .readdirSync(migrationsDir)
     .filter((file) => file.endsWith(".sql"))
     .sort();
-
-// console.log(files);
 
 async function getExecutedMigrations() {
     const result = await db.query(
@@ -20,10 +17,18 @@ async function getExecutedMigrations() {
     return result.rows.map((row) => row.filename);
 }
 
-getExecutedMigrations()
-    .then((migrations) => {
-        console.log(migrations);
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+function getPendingMigrations(files, executedMigrations) {
+    return files.filter((file) => !executedMigrations.includes(file));
+}
+
+async function migrate() {
+    const executedMigrations = await getExecutedMigrations();
+
+    const pendingMigrations = getPendingMigrations(files, executedMigrations);
+
+    console.log("Pending migrations:", pendingMigrations);
+}
+
+migrate().catch((error) => {
+    console.error(error);
+});
