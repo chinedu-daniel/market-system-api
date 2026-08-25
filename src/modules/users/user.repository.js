@@ -27,7 +27,7 @@ exports.createUser = async ({
 
 exports.findUserById = async (id) => {
   const result = await db.query(
-    `SELECT id, first_name, last_name, email
+    `SELECT id, email, role
     FROM users
     WHERE id = $1`,
     [id]
