@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
+const { findUserById } = require("../modules/users/user.repository");
 
-function protect(req, res, next) {
+async function protect(req, res, next) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -17,7 +18,13 @@ function protect(req, res, next) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.user = decoded;
+        const user = await findUserById(decoded.id);
+
+        if (!user) {
+            return next(new AppError("User no longer exists", 402));
+        }
+
+        req.user = user;
 
         next();
     } catch (error) {
