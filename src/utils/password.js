@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 
-const pepper = process.env.PASSWORD_PEPPER || "";
+const pepper = process.env.PASSWORD_PEPPER;
 
 function applyPepper(password) {
     return password + pepper;
@@ -12,4 +12,8 @@ exports.hashPassword = async (password) => {
 
 exports.comparePassword = async (password, hashedPassword) => {
     return bcrypt.compare(applyPepper(password), hashedPassword);
+}
+
+exports.compareLegacyPassword = async (password, hashedPassword) => {
+    return bcrypt.compare(password, hashedPassword);
 }
