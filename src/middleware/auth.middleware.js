@@ -21,7 +21,7 @@ async function protect(req, res, next) {
         const user = await findUserById(decoded.id);
 
         if (!user) {
-            return next(new AppError("User no longer exists", 402));
+            return next(new AppError("User no longer exists", 401));
         }
 
         req.user = user;
