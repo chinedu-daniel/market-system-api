@@ -213,3 +213,14 @@ exports.linkGoogleAccount = async (userId, googleId) => {
 
   return rows[0];
 };
+
+exports.updatePassword = async (userId, hashedPassword) => {
+  await db.query(
+    `
+    UPDATE users
+    SET PASSWORD = $1
+    WHERE id = $2
+    `,
+    [hashedPassword, userId]
+  );
+};
