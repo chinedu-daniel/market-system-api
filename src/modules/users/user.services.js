@@ -182,7 +182,7 @@ exports.refreshAccessToken = async (refreshToken) => {
   let decoded;
 
   try {
-    decoded = jwt.verify(refreshToken, "my_refresh_secret_key");
+    decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
   } catch (error) {
     throw new AppError("Invalid or expired refresh token", 401);
   }
