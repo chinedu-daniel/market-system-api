@@ -13,9 +13,16 @@ exports.signup = asyncHandler(async (req, res) => {
 exports.login = asyncHandler(async (req, res) => {
   const result = await userService.login(req.body);
 
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true
+  });
+
   res.status(200).json({
     message: "User logged in successfully",
-    data: result
+    data: {
+      user: result.user,
+      accessToken: result.accessToken
+    }
   });
 });
 
@@ -61,7 +68,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.refreshToken = asyncHandler(async (req, res, next) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies.refreshToken;
 
   const result = await userService.refreshAccessToken(refreshToken);
 
