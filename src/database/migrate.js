@@ -1,6 +1,7 @@
+require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const db = require("../db/database");
+const db = require("../db/migration-database");
 
 const migrationsDir = path.join(__dirname, "migrations");
 
