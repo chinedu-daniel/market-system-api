@@ -221,7 +221,7 @@ exports.forgotPassword = async (email) => {
   if (!user) {
     return {
       message:
-        "If an account with that email exists, a password reset link has been sent.",
+        "If an account with that email exists, a password reset link will be sent.",
     };
   }
 
@@ -250,7 +250,7 @@ exports.forgotPassword = async (email) => {
 
   return {
     message:
-      "If an account with that email exists, a password reset link has been sent.",
+      "If an account with that email exists, a password reset link will be sent.",
   };
 };
 
