@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-
 const userController = require("./user.controller");
 const validate = require("../../middleware/validate");
 const { signupSchema, loginSchema, updateUserSchema,
     forgotPasswordSchema, resetPasswordSchema,
     verifyEmailSchema, resendVerificationSchema,
-    googleLoginSchema} = require("./user.schema");
+    googleLoginSchema } = require("./user.schema");
 const protect = require("../../middleware/auth.middleware");
 const authorize = require("../../middleware/authorize.middleware");
+const loginLimiter = require("../../middleware/rateLimit.middleware");
 
 router.post(
     "/signup",
@@ -18,6 +18,7 @@ router.post(
 
  router.post(
     "/login",
+    loginLimiter,
     validate(loginSchema),
     userController.login
 );
