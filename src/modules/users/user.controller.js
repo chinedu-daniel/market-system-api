@@ -14,7 +14,9 @@ exports.login = asyncHandler(async (req, res) => {
   const result = await userService.login(req.body);
 
   res.cookie("refreshToken", result.refreshToken, {
-    httpOnly: true
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    samesite: "strict"
   });
 
   res.status(200).json({
@@ -72,9 +74,17 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
 
   const result = await userService.refreshAccessToken(refreshToken);
 
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    samesite: "strict"
+  });
+
   res.status(200).json({
     message: "Access token refreshed successfully",
-    data: result
+    data: {
+      accessToken: result.accessToken
+    }
   });
 });
 
