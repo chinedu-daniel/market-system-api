@@ -38,9 +38,9 @@ exports.getProfile = asyncHandler(async(req, res) => {
 });
 
 exports.logout = asyncHandler(async (req, res, next) => {
-  const { refreshToken } = req.body;
+  const { sessionId } = req.body;
 
-  const result = await userService.logout(refreshToken);
+  const result = await userService.logout(sessionId, req.user.id);
 
   res.status(200).json({
     message: result.message
