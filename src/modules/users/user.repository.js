@@ -52,13 +52,13 @@ exports.updateUserById = async (id, updates) => {
   return result.rows[0];
 };
 
-exports.saveRefreshToken = async (userId, hashedToken) => {
+exports.saveRefreshToken = async (userId, hashedToken, sessionId) => {
   await db.query(
     `
-    INSERT INTO refresh_tokens (user_id, token)
-    VALUES ($1, $2)
+    INSERT INTO refresh_tokens (user_id, token, session_id)
+    VALUES ($1, $2, $3)
     `,
-    [userId, hashedToken]
+    [userId, hashedToken, sessionId]
   );
 };
 
