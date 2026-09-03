@@ -19,7 +19,7 @@ exports.createUser = async ({
     `INSERT INTO users
     (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) 
     RETURNING id, first_name, last_name, email, role`,
-    [email, first_name, last_name, password]
+    [first_name, last_name, email, password]
   );
 
   return result.rows[0];
@@ -224,3 +224,18 @@ exports.updatePassword = async (userId, hashedPassword) => {
     [hashedPassword, userId]
   );
 };
+
+exports.updateLoginAttempts = async (userId, failedAttempts, lockedUntil) => {
+  const result = await db.query(
+    `
+    UPDATE users
+    SET failed_login_attempts = $1,
+      locked_until = $2
+    WHERE id = $3
+    RETURNING id, email, failed_login_attempts, locked_until
+    `,
+    [failedAttempts, lockedUntil, userId]
+  );
+
+  return result.rows[0];
+}
