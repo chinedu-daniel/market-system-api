@@ -448,3 +448,7 @@ exports.logoutAllSessions = async (userId) => {
     message: "Logged out from all sessions successfully"
   };
 };
+
+exports.getActiveSessions = async (userId) => {
+  return await userRepository.getActiveSessionsByUserId(userId);
+};
