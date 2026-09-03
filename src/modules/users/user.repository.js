@@ -250,3 +250,17 @@ exports.deleteRefreshTokensBySessionId = async (sessionId, userId) => {
     [sessionId, userId]
   );
 };
+
+exports.getActiveSessionsByUserId = async (userId) => {
+  const result = await db.query(
+    `
+    SELECT id, session_id, created_at
+    FROM refresh_tokens
+    WHERE user_id = $1
+    AND session_id IS NOT NULL
+    ORDER BY created_at DESC
+    `,
+    [userId]
+  );
+    return result.rows;
+};
