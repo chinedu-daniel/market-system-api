@@ -90,4 +90,10 @@ router.post(
     userController.googleLogin
 );
 
+router.get(
+    "/sessions",
+    protect,
+    userController.getActiveSessions
+);
+
 module.exports = router;
