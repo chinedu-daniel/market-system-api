@@ -175,14 +175,12 @@ exports.login = async (data) => {
   };
 };
 
-exports.logout = async (refreshToken) => {
-  if (!refreshToken) {
-    throw new AppError("Refresh token is required", 400);
+exports.logout = async (sessionId, userId) => {
+  if (!sessionId) {
+    throw new AppError("Session ID is required", 400);
   }
 
-  const hashedRefreshToken = hashToken(refreshToken);
-
-  await userRepository.deleteRefreshToken(hashedRefreshToken);
+  await userRepository.deleteRefreshTokensBySessionId(sessionId, userId);
 
   return { message: "Logged out successfully" };
 };
