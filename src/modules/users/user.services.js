@@ -156,10 +156,13 @@ exports.login = async (data) => {
   const refreshToken = generateRefreshToken(user);
   const hashedRefreshToken = hashToken(refreshToken);
 
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); 
+
   await userRepository.saveRefreshToken(
     user.id,
     hashedRefreshToken,
-    sessionId
+    sessionId,
+    expiresAt
   );
 
   return {
@@ -254,10 +257,14 @@ exports.refreshAccessToken = async (refreshToken) => {
   const newRefreshToken = generateRefreshToken(user);
   const hashedNewRefreshToken = hashToken(newRefreshToken);
 
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
   await userRepository.saveRefreshToken(
     user.id,
     hashedNewRefreshToken,
-    storedToken.session_id);
+    storedToken.session_id,
+    expiresAt
+  );
 
   return {
     accessToken: newAccessToken,
