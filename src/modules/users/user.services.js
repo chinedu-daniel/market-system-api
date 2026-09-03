@@ -21,6 +21,7 @@ const {
 const {
   sendPasswordResetEmail,
 } = require("../../utils/email/passwordResetEmail");
+const crypto = require("crypto");
 
 exports.signup = async (data) => {
   const { first_name, last_name, email, password } = data;
@@ -149,11 +150,17 @@ exports.login = async (data) => {
     null
   );
 
+  const sessionId = crypto.randomUUID();
+
   const accessToken = generateToken(user);
   const refreshToken = generateRefreshToken(user);
   const hashedRefreshToken = hashToken(refreshToken);
 
-  await userRepository.saveRefreshToken(user.id, hashedRefreshToken);
+  await userRepository.saveRefreshToken(
+    user.id,
+    hashedRefreshToken,
+    sessionId
+  );
 
   return {
     user: {
@@ -227,7 +234,9 @@ exports.refreshAccessToken = async (refreshToken) => {
 
   const hashedRefreshToken = hashToken(refreshToken);
 
-  const storedToken = await userRepository.findRefreshToken(hashedRefreshToken);
+  const storedToken = await userRepository.findRefreshToken(
+    hashedRefreshToken
+  );
 
   if (!storedToken) {
     throw new AppError("Refresh token not recognized", 401);
@@ -239,13 +248,18 @@ exports.refreshAccessToken = async (refreshToken) => {
     throw new AppError("User not found", 404);
   }
 
-  await userRepository.deleteRefreshToken(hashedRefreshToken);
+  await userRepository.deleteRefreshToken(
+    hashedRefreshToken
+  );
 
   const newAccessToken = generateToken(user);
   const newRefreshToken = generateRefreshToken(user);
   const hashedNewRefreshToken = hashToken(newRefreshToken);
 
-  await userRepository.saveRefreshToken(user.id, hashedNewRefreshToken);
+  await userRepository.saveRefreshToken(
+    user.id,
+    hashedNewRefreshToken,
+    storedToken.session_id);
 
   return {
     accessToken: newAccessToken,
