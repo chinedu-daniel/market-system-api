@@ -93,6 +93,24 @@ exports.login = async (data) => {
     throw new AppError("Invalid email or password", 401);
   }
 
+  if (user.locked_until && new Date() < new Date(user.locked_until)) {
+    throw new AppError(
+      "Account temporarily locked. Please try again later.",
+      429
+    );
+  }
+
+  if (user.locked_until && new Date() >= new Date(user.locked_until)) {
+    await userRepository.updateLoginAttempts(
+      user.id,
+      0,
+      null
+    );
+
+    user.failed_login_attempts = 0;
+    user.locked_until = null;
+  }
+
   if (!user.is_verified) {
     throw new AppError("Please verify your email before logging in", 403);
   }
@@ -103,6 +121,20 @@ exports.login = async (data) => {
     const legacyMatch = await compareLegacyPassword(password, user.password);
 
     if (!legacyMatch) {
+      const failedAttempts = user.failed_login_attempts + 1;
+
+      let lockedUntil = null;
+
+      if (failedAttempts >= 5) {
+        lockedUntil = new Date(Date.now() + 15 * 60 * 1000);
+      }
+
+      await userRepository.updateLoginAttempts(
+        user.id,
+        failedAttempts,
+        lockedUntil
+      );
+
       throw new AppError("Invalid email or password", 401);
     }
 
@@ -110,6 +142,12 @@ exports.login = async (data) => {
 
     await userRepository.updatePassword(user.id, upgradedash);
   }
+
+  await userRepository.updateLoginAttempts(
+    user.id,
+    0,
+    null
+  );
 
   const accessToken = generateToken(user);
   const refreshToken = generateRefreshToken(user);
