@@ -239,3 +239,14 @@ exports.updateLoginAttempts = async (userId, failedAttempts, lockedUntil) => {
 
   return result.rows[0];
 }
+
+exports.deleteRefreshTokensBySessionId = async (sessionId, userId) => {
+  await db.query(
+    `
+    DELETE FROM refresh_tokens
+    WHERE session_id = $1
+    AND user_id = $2;
+    `,
+    [sessionId, userId]
+  );
+};
