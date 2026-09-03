@@ -40,6 +40,12 @@ router.post(
     userController.logout
 );
 
+router.post(
+    "/logout-all",
+    protect,
+    userController.logoutAllSessions
+);
+
 router.get(
     "/admin-only",
     protect,
