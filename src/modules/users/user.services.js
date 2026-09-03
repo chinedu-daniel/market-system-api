@@ -440,3 +440,11 @@ exports.googleLogin = async (credential) => {
     refreshToken,
   };
 };
+
+exports.logoutAllSessions = async (userId) => {
+  await userRepository.deleteRefreshTokensByUserId(userId);
+
+  return {
+    message: "Logged out from all sessions successfully"
+  };
+};
