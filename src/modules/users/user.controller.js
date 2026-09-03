@@ -150,3 +150,11 @@ exports.logoutAllSessions = asyncHandler(async (req, res) => {
     message: result.message
   });
 });
+
+exports.getActiveSessions = asyncHandler(async (req, res) => {
+  const sessions = await userService.getActiveSessions(req.user.id);
+
+  res.status(200).json({
+    sessions
+  });
+});
