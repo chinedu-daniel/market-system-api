@@ -142,3 +142,11 @@ exports.googleLogin = asyncHandler(async (req, res) => {
     data: result
   });
 });
+
+exports.logoutAllSessions = asyncHandler(async (req, res) => {
+  const result = await userService.logoutAllSessions(req.user.id);
+
+  res.status(200).json({
+    message: result.message
+  });
+});
