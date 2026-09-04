@@ -269,3 +269,15 @@ exports.getActiveSessionsByUserId = async (userId) => {
   );
     return result.rows;
 };
+
+exports.deleteExpiredRefreshTokens = async () => {
+  const result = await db.query(
+    `
+    DELETE FROM refresh_tokens
+    WHERE expires_at IS NOT NULL
+    AND expires_at < NOW()
+    `
+  );
+
+  return result.rowCount; // Return the number of deleted rows
+};
