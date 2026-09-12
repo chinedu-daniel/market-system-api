@@ -143,7 +143,9 @@ exports.updatePasswordAfterReset = async (userId, hashedPassword) => {
 
 exports.saveEmailVerificationToken = async (userId, hashedToken, expiresAt) => {
   const query = `
-  UPDATE users SET email_verification_token = $1, email_verification_expires = $2
+  UPDATE users 
+  SET email_verification_token = $1, 
+    email_verification_expires = $2
   WHERE id = $3
   RETURNING id, first_name, last_name, email, is_verified
   `;
