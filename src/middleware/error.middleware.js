@@ -1,11 +1,15 @@
 module.exports = (err, req, res, next) => {
     if (process.env.NODE_ENV === "development") {
-        console.log(err);
+        console.error(err);
     } else {
         console.error("Application error:", err.message);
     }
 
-    const statusCode = err.statusCode || 500;
+    let statusCode = err.statusCode || 500;
+
+    if (err.name === "ValidationError") {
+        statusCode = 400;
+    }
 
     res.status(statusCode).json({
         message: err.message  || "Internal Server Error"
