@@ -1,5 +1,9 @@
 module.exports = (err, req, res, next) => {
-    console.log(err);
+    if (process.env.NODE_ENV === "development") {
+        console.log(err);
+    } else {
+        console.error("Application error:", err.message);
+    }
 
     const statusCode = err.statusCode || 500;
 
