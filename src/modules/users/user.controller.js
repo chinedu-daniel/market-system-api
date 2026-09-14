@@ -28,6 +28,8 @@ exports.login = asyncHandler(async (req, res) => {
   });
 });
 
+exports
+
 exports.getProfile = asyncHandler(async(req, res) => {
   const user = await userService.getProfile(req.user.id);
 
