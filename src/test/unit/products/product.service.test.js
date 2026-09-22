@@ -80,3 +80,13 @@ test("updates product when product exists", async () => {
         updatedAt: undefined
     });
 });
+
+test("returns 404 when product to update is not found", async () => {
+    productRepository.findProductById.mockResolvedValue(null);
+
+    await expect (
+        productService.updateProduct(1, {
+            price: 550000.00
+        })
+    ).rejects.toThrow("Product not found");
+});
