@@ -128,3 +128,12 @@ test("deletes product when product exists and is active", async () => {
         updatedAt: undefined
     });
 });
+
+
+test("returns 404 when product to delete is not found", async () => {
+    productRepository.findProductById.mockResolvedValue(null);
+
+    await expect (
+        productService.deleteProduct(1)
+    ).rejects.toThrow("Product not found");
+});
