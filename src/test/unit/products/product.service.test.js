@@ -16,6 +16,8 @@ jest.spyOn(productRepository, "findProductById")
 
 jest.spyOn(productRepository, "updateProduct");
 
+jest.spyOn(productRepository, "deleteProduct");
+
 test("returns product when product exists", async () => {
     await expect(
         productService.getProductById(1)
@@ -89,4 +91,40 @@ test("returns 404 when product to update is not found", async () => {
             price: 550000.00
         })
     ).rejects.toThrow("Product not found");
+});
+
+
+test("deletes product when product exists and is active", async () => {
+    const existingProduct = {
+        id: 1,
+        name: "Suzuki K6A",
+        price: 500000.00,
+        quantity: 10,
+        is_active: true
+    };
+
+    const deletedProduct = {
+        id: 1,
+        name: "Suzuki K6A",
+        price: 500000.00,
+        quantity: 10,
+        is_active: false
+    };
+
+    productRepository.findProductById.mockResolvedValue(existingProduct);
+
+    productRepository.deleteProduct.mockResolvedValue(deletedProduct);
+
+    const result = await productService.deleteProduct(1);
+
+    expect(result).toEqual({
+        id: 1,
+        name: "Suzuki K6A",
+        description: undefined,
+        price: 500000,
+        quantity: 10,
+        isActive: false,
+        createdAt: undefined,
+        updatedAt: undefined
+    });
 });
