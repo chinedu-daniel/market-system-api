@@ -137,3 +137,19 @@ test("returns 404 when product to delete is not found", async () => {
         productService.deleteProduct(1)
     ).rejects.toThrow("Product not found");
 });
+
+test("returns 400 when product is already inactive", async () => {
+    const inactiveProduct = {
+        id: 1,
+        name: "Suzuki K6A",
+        price: 500000.00,
+        quantity: 10,
+        is_active: false
+    };
+
+    productRepository.findProductById.mockResolvedValue(inactiveProduct);
+
+    await expect (
+        productService.deleteProduct(1)
+    ).rejects.toThrow("Product is already inactive");
+});
