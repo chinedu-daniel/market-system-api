@@ -193,3 +193,29 @@ test("creates product when product does not already exist", async () => {
         updatedAt: undefined
     });
 });
+
+test("returns 409 when the product already exists", async () => {
+    const existingProduct = {
+        id: 2,
+        name: "Toyota 1NZ",
+        description: "Toyota engine",
+        price: 600000,
+        quantity: 5,
+        is_active: true
+    };
+
+    const productData = {
+        id: 2,
+        name: "Toyota 1NZ",
+        description: "Toyota engine",
+        price: 600000,
+        quantity: 5,
+        is_active: true
+    };
+
+    productRepository.findProductByName.mockResolvedValue(existingProduct);
+
+    await expect (
+        productService.createProduct(productData)
+    ).rejects.toThrow("Product already exists");
+});
