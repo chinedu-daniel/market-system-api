@@ -18,6 +18,10 @@ jest.spyOn(productRepository, "updateProduct");
 
 jest.spyOn(productRepository, "deleteProduct");
 
+jest.spyOn(productRepository, "createProduct");
+
+jest.spyOn(productRepository, "findProductByName");
+
 test("returns product when product exists", async () => {
     await expect(
         productService.getProductById(1)
@@ -152,4 +156,40 @@ test("returns 400 when product is already inactive", async () => {
     await expect (
         productService.deleteProduct(1)
     ).rejects.toThrow("Product is already inactive");
+});
+
+
+test("creates product when product does not already exist", async () => {
+    const productData = {
+        name: "Toyota 1NZ",
+        description: "Toyota engine",
+        price: 600000.00,
+        quantity: 5
+    };
+
+    const createdProduct = {
+        id: 2,
+        name: "Toyota 1NZ",
+        description: "Toyota engine",
+        price: 600000,
+        quantity: 5,
+        is_active: true
+    };
+
+    productRepository.findProductByName.mockResolvedValue(null);
+
+    productRepository.createProduct.mockResolvedValue(createdProduct);
+
+    const result = await productService.createProduct(productData);
+
+    expect(result).toEqual({
+        id: 2,
+        name: "Toyota 1NZ",
+        description: "Toyota engine",
+        price: 600000,
+        quantity: 5,
+        isActive: true,
+        createdAt: undefined,
+        updatedAt: undefined
+    });
 });
