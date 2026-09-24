@@ -1,4 +1,4 @@
-module.exports = (err, req, res, next) => {
+module.exports = (err, req, res) => {
     if (process.env.NODE_ENV === "development") {
         console.error(err);
     } else {
