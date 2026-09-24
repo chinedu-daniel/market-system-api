@@ -13,7 +13,7 @@ const generateResetToken = require("../../utils/tokens/resetToken");
 const createEmailverificationToken = require("../../utils/tokens/verificationToken");
 const refreshTokenRepository = require("./refreshToken.repository");
 const { verifyGoogleToken } = require("../../utils/googleAuth");
-const { message } = require("statuses");
+// const { message } = require("statuses");
 const { frontendUrl } = require("../../config/app.config");
 const {
   sendVerificationEmail,
@@ -22,6 +22,7 @@ const {
   sendPasswordResetEmail,
 } = require("../../utils/email/passwordResetEmail");
 const crypto = require("crypto");
+const { sendEmail } = require("../../utils/email/transport");
 
 exports.signup = async (data) => {
   const { first_name, last_name, email, password } = data;
@@ -229,7 +230,7 @@ exports.refreshAccessToken = async (refreshToken) => {
 
   try {
     decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-  } catch (error) {
+  } catch {
     throw new AppError("Invalid or expired refresh token", 401);
   }
 
@@ -400,7 +401,7 @@ exports.googleLogin = async (credential) => {
 
   try {
     googleUser = await verifyGoogleToken(credential);
-  } catch (error) {
+  } catch {
     throw new AppError("Invalid Google credential", 401);
   }
 
@@ -423,11 +424,10 @@ exports.googleLogin = async (credential) => {
     } else {
       // create brand new google account
       user = await userRepository.createGoogleUser({
-        id,
         first_name,
         last_name,
         email,
-        role,
+        googleId
       });
     }
   }
