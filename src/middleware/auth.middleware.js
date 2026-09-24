@@ -27,7 +27,7 @@ async function protect(req, res, next) {
         req.user = user;
 
         next();
-    } catch (error) {
+    } catch {
         next(new AppError("Invalid or expired token", 401));
     }
 }
