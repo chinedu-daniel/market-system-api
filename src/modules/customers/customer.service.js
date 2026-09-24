@@ -2,7 +2,7 @@ const customerRepository = require("./customer.repository");
 const AppError = require("../../utils/appError");
 const { validatePagination } = require("../../utils/pagination");
 
-exports.registerCustomer = async (customerData, currentUser) => {
+exports.registerCustomer = async (customerData) => {
     const existingCustomer = await customerRepository.findCustomerByEmail(customerData.email);
 
     if (existingCustomer) {
