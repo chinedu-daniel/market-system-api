@@ -39,7 +39,7 @@ exports.getProfile = asyncHandler(async(req, res) => {
   });
 });
 
-exports.logout = asyncHandler(async (req, res, next) => {
+exports.logout = asyncHandler(async (req, res) => {
   const { sessionId } = req.body;
 
   const result = await userService.logout(sessionId, req.user.id);
@@ -49,7 +49,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.adminOnly = asyncHandler(async (req, res, next) => {
+exports.adminOnly = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Welcome Admin",
     data: {
@@ -58,7 +58,7 @@ exports.adminOnly = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.updateUser = asyncHandler(async (req, res, next) => {
+exports.updateUser = asyncHandler(async (req, res) => {
   const updatedUser = await userService.updateUser(
     req.params.id,
     req.user,
@@ -71,7 +71,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.refreshToken = asyncHandler(async (req, res, next) => {
+exports.refreshToken = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
   const result = await userService.refreshAccessToken(refreshToken);
