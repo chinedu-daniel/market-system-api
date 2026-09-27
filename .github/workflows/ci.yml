@@ -20,6 +20,8 @@ jobs:
       DB_NAME: market_system_test
       DB_USER: postgres
       DB_PASSWORD: postgres
+      MIGRATION_DB_USER: postgres
+      MIGRATION_DB_PASSWORD: postgres
 
     services:
       postgres:
