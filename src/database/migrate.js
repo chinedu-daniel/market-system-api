@@ -56,4 +56,5 @@ async function migrate() {
 
 migrate().catch((error) => {
     console.error(error);
+    process.exit(1);
 });
