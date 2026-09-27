@@ -23,6 +23,7 @@ CREATE TABLE products (
     quantity INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
+    is_active BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT products_name_unique UNIQUE (name),
     CONSTRAINT product_price_check CHECK (price >= 0),
