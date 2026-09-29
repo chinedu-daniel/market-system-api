@@ -5,7 +5,7 @@ const cleanupExpiredSessions = require("./jobs/sessionCleanup");
 const app = require("./app");
 const db = require("./db/database");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 cleanupExpiredSessions(); // Run the session cleanup job on server start
 
