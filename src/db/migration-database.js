@@ -5,7 +5,10 @@ const migrationDb = new Pool({
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
     user: process.env.MIGRATION_DB_USER,
-    password: process.env.MIGRATION_DB_PASSWORD
+    password: process.env.MIGRATION_DB_PASSWORD,
+    ssl: process.env.DB_SSL === "true"
+        ? { rejectUnautorized: false }
+        : false
 });
 
 module.exports = migrationDb;
