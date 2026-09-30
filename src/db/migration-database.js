@@ -7,7 +7,7 @@ const migrationDb = new Pool({
     user: process.env.MIGRATION_DB_USER,
     password: process.env.MIGRATION_DB_PASSWORD,
     ssl: process.env.DB_SSL === "true"
-        ? { rejectUnautorized: false }
+        ? { rejectUnauthorized: false }
         : false
 });
 
