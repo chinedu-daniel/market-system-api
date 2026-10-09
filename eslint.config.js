@@ -24,4 +24,18 @@ module.exports = [
     },
 
     js.configs.recommended,
+
+
+    {
+        rules: {
+            "no-unused-vars": [
+                "error",
+                {
+                    args: "after-used",
+                    argsIgnorePattern: "^_",
+                },
+            ],
+        },
+    },
+
 ];
