@@ -58,18 +58,6 @@ async function migrate() {
         } finally {
             client.release();
         }
-
-        // await db.query(sql);
-
-        // await db.query(
-        //     `
-        //     INSERT INTO schema_migrations (filename)
-        //     VALUES ($1)
-        //     `,
-        //     [migration]
-        // );
-
-        // console.log(`Migration completed: ${migration}`);
     }
 }
 
