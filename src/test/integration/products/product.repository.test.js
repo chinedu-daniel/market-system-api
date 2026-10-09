@@ -7,7 +7,7 @@ describe("Product Repository Integration Tests", () => {
 
     let productId;
 
-    test("should connect to the test database", async () => {
+    it("should connect to the test database", async () => {
         const insertResult = await db.query(
             `
             INSERT INTO products (

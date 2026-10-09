@@ -22,7 +22,7 @@ jest.spyOn(productRepository, "createProduct");
 
 jest.spyOn(productRepository, "findProductByName");
 
-test("returns product when product exists", async () => {
+it("returns product when product exists", async () => {
     await expect(
         productService.getProductById(1)
     ).resolves.toEqual({
@@ -37,7 +37,7 @@ test("returns product when product exists", async () => {
     });
 });
 
-test("returns 404 when product is not found", async () => {
+it("returns 404 when product is not found", async () => {
     expect.assertions(1);
 
     productRepository.findProductById.mockResolvedValue(null);
@@ -49,7 +49,7 @@ test("returns 404 when product is not found", async () => {
     }
 });
 
-test("updates product when product exists", async () => {
+it("updates product when product exists", async () => {
     const existingProduct = {
         id: 1,
         name: "Suzuki K6A",
@@ -87,7 +87,7 @@ test("updates product when product exists", async () => {
     });
 });
 
-test("returns 404 when product to update is not found", async () => {
+it("returns 404 when product to update is not found", async () => {
     productRepository.findProductById.mockResolvedValue(null);
 
     await expect (
@@ -98,7 +98,7 @@ test("returns 404 when product to update is not found", async () => {
 });
 
 
-test("deletes product when product exists and is active", async () => {
+it("deletes product when product exists and is active", async () => {
     const existingProduct = {
         id: 1,
         name: "Suzuki K6A",
@@ -134,7 +134,7 @@ test("deletes product when product exists and is active", async () => {
 });
 
 
-test("returns 404 when product to delete is not found", async () => {
+it("returns 404 when product to delete is not found", async () => {
     productRepository.findProductById.mockResolvedValue(null);
 
     await expect (
@@ -142,7 +142,7 @@ test("returns 404 when product to delete is not found", async () => {
     ).rejects.toThrow("Product not found");
 });
 
-test("returns 400 when product is already inactive", async () => {
+it("returns 400 when product is already inactive", async () => {
     const inactiveProduct = {
         id: 1,
         name: "Suzuki K6A",
@@ -159,7 +159,7 @@ test("returns 400 when product is already inactive", async () => {
 });
 
 
-test("creates product when product does not already exist", async () => {
+it("creates product when product does not already exist", async () => {
     const productData = {
         name: "Toyota 1NZ",
         description: "Toyota engine",
@@ -194,7 +194,7 @@ test("creates product when product does not already exist", async () => {
     });
 });
 
-test("returns 409 when the product already exists", async () => {
+it("returns 409 when the product already exists", async () => {
     const existingProduct = {
         id: 2,
         name: "Toyota 1NZ",
