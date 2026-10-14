@@ -16,7 +16,7 @@ router.post(
     userController.signup
 );
 
- router.post(
+router.post(
     "/login",
     loginLimiter,
     validate(loginSchema),
